@@ -4,238 +4,261 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ARIZE KAI // COMMAND CENTER</title>
-    <link rel="icon" type="image/x-icon" href="Screenshot 2026-02-21 233046.png">
     <style>
         :root {
-            --red: #ff0000;
-            --bg: #030303;
-            --card: #0a0a0a;
-            --border: #1a1a1a;
-            --diamond: #b9f2ff;
-            --gold: #ffd700;
-            --silver: #c0c0c0;
-            --bronze: #cd7f32;
+            --bg: #090712; /* Deep Midnight Purple */
+            --card: #131022; /* Darker Card */
+            --accent: #a855f7; /* Electric Purple */
+            --accent-glow: rgba(168, 85, 247, 0.4);
+            --text: #f3f4f6;
+            --text-dim: #94a3b8;
+            --border: #2d264d;
         }
 
         body {
             background-color: var(--bg);
-            color: #fff;
-            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            font-family: 'Inter', -apple-system, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 15px;
             display: flex;
             justify-content: center;
         }
 
-        .container { max-width: 1300px; width: 100%; }
+        .container { 
+            max-width: 450px; 
+            width: 100%; 
+        }
 
         header {
             text-align: center;
-            padding: 60px 0;
-            border-bottom: 1px solid var(--border);
+            padding: 40px 0;
         }
 
         h1 {
-            font-size: 5rem;
+            font-size: 2.8rem;
             margin: 0;
-            letter-spacing: -4px;
             font-weight: 900;
+            letter-spacing: -2px;
+            color: #fff;
             text-transform: uppercase;
-            background: linear-gradient(180deg, #fff 40%, var(--red) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px var(--accent-glow);
         }
 
-        .tagline { color: var(--red); letter-spacing: 5px; font-weight: bold; font-size: 12px; margin-top: 5px; }
+        .tagline { 
+            color: var(--accent); 
+            letter-spacing: 3px; 
+            font-weight: 700; 
+            font-size: 10px; 
+            margin-top: 8px;
+            text-transform: uppercase;
+        }
 
         .bento {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            display: flex;
+            flex-direction: column;
             gap: 15px;
-            margin-top: 30px;
         }
 
         .block {
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 28px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
-        .block:hover { border-color: #333; transform: translateY(-3px); }
-        .span-2 { grid-column: span 2; }
-        .span-3 { grid-column: span 3; }
-        .span-4 { grid-column: span 4; }
-        .tall { grid-row: span 2; }
-
-        h2 { font-size: 11px; text-transform: uppercase; color: #444; margin: 0 0 15px 0; border-left: 2px solid var(--red); padding-left: 10px; }
+        h2 { 
+            font-size: 11px; 
+            text-transform: uppercase; 
+            color: var(--accent); 
+            margin: 0 0 16px 0; 
+            letter-spacing: 2px;
+            font-weight: 800;
+        }
 
         .list-row {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #111;
-            font-size: 13px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
         }
 
-        .rank-tag { font-family: monospace; font-weight: bold; font-size: 11px; }
+        .rank-tag { font-weight: 700; font-size: 11px; color: var(--text-dim); }
+        .instructor-tag { color: var(--accent); font-weight: 900; text-shadow: 0 0 10px var(--accent-glow); }
 
         input, select, button {
             width: 100%;
-            background: #111;
+            background: #1c1833;
             border: 1px solid var(--border);
             color: #fff;
-            padding: 12px;
+            padding: 16px;
             margin-top: 10px;
-            border-radius: 6px;
+            border-radius: 16px;
+            font-size: 14px;
+            box-sizing: border-box;
+            outline: none;
+            font-family: inherit;
+            transition: 0.3s;
         }
 
-        button { background: var(--red); border: none; font-weight: 900; cursor: pointer; text-transform: uppercase; }
-        button:hover { background: #cc0000; box-shadow: 0 0 15px rgba(255,0,0,0.3); }
+        input:focus { border-color: var(--accent); background: #231e42; }
 
-        #adminSection { display: none; margin-top: 30px; border: 1px dashed var(--red); padding: 20px; border-radius: 12px; }
-        .pending-req { display: flex; justify-content: space-between; align-items: center; background: #000; padding: 10px; margin-bottom: 5px; border-radius: 4px; }
+        button { 
+            background: var(--accent); 
+            color: white; 
+            border: none; 
+            font-weight: 800; 
+            cursor: pointer; 
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-        .creed { font-style: italic; color: #888; text-align: center; margin-top: 40px; font-size: 14px; }
-        .glitch { animation: glitch 1s infinite alternate; }
-        @keyframes glitch { 0% { opacity: 1; } 100% { opacity: 0.8; color: #ff3333; } }
+        button:active { transform: scale(0.96); }
+
+        #adminSection { 
+            display: none; 
+            margin-top: 20px; 
+            padding: 20px; 
+            background: #1c1833; 
+            border-radius: 24px; 
+            border: 1px solid var(--accent);
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 4, 10, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(15px);
+        }
+        .modal-box {
+            background: var(--card);
+            padding: 40px;
+            border-radius: 32px;
+            width: 85%;
+            max-width: 320px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        #sentMsg {
+            background: rgba(168, 85, 247, 0.1);
+            color: var(--accent);
+            padding: 12px;
+            border-radius: 14px;
+            text-align: center;
+            font-size: 13px;
+            margin-top: 15px;
+            font-weight: 700;
+            border: 1px solid rgba(168, 85, 247, 0.2);
+        }
+
+        .creed { color: var(--text-dim); text-align: center; margin: 40px 0; font-size: 12px; font-style: italic; }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div id="passwordModal" class="modal-overlay">
+    <div class="modal-box">
+        <h2 style="color: #fff; margin-bottom: 8px;">Restricted</h2>
+        <p style="font-size: 12px; color: var(--text-dim); margin-bottom: 20px;">Verification Required</p>
+        <input type="password" id="staffPassInput" placeholder="Passcode">
+        <button onclick="checkPass()">Unlock</button>
+        <p onclick="closeModal()" style="color: var(--text-dim); font-size: 11px; margin-top: 20px; cursor: pointer;">Cancel</p>
+    </div>
+</div>
+
+<div class="container" id="mainContainer">
     <header>
-        <h1 class="glitch">ARIZE KAI</h1>
-        <div class="tagline">STRIKE FAST • RISE UP • ARIZE OR FALL</div>
+        <h1>ARIZE KAI</h1>
+        <div class="tagline">Midnight • Power • Authority</div>
     </header>
 
     <div class="bento">
         <div class="block">
-            <h2>Requirements</h2>
-            <div style="font-size: 28px; font-weight: 900; color: #fff;">TIER 40+</div>
-            <div style="font-size: 16px; color: var(--red);">Orange Belt+</div>
-            <p style="font-size: 12px; color: #555; margin-top: 10px;">4 Points on Recruiter (Skill exceptions allowed).</p>
+            <h2>Dojo Hierarchy</h2>
+            <div class="list-row"><span>@hlxzp</span><span class="rank-tag">EMPEROR</span></div>
+            <div class="list-row"><span>@kyx</span><span class="rank-tag">HAND</span></div>
+            <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border);">
+                <div class="list-row"><span>@rose_official</span><span class="instructor-tag">INSTRUCTOR</span></div>
+                <div class="list-row"><span>@seo</span><span class="rank-tag">MODERATOR</span></div>
+                <div class="list-row"><span>@Hulkyboi</span><span class="rank-tag">RECRUITER</span></div>
+            </div>
         </div>
 
-        <div class="block tall">
-            <h2>Book Training</h2>
-            <p style="font-size: 12px; color: #888;">Enter Username. Submission time is recorded automatically.</p>
+        <div class="block">
+            <h2>Book Session</h2>
             <form id="bookForm">
                 <input type="text" id="userNameBox" placeholder="Roblox Username" required>
                 <select id="trainingType">
                     <option>Rank Tryout</option>
-                    <option>Sparring (Combat)</option>
-                    <option>Private Training</option>
+                    <option>Combat Training</option>
                 </select>
-                <button type="submit">SUBMIT REQUEST</button>
+                <button type="submit">Submit Request</button>
             </form>
-            <p id="sentMsg" style="display:none; color: lime; font-size: 11px; margin-top: 15px;">✓ Request logged with timestamp.</p>
+            <div id="sentMsg" style="display:none;">Request transmitted to Instructors.</div>
         </div>
 
-        <div class="block span-2">
-            <h2>Dojo Hierarchy</h2>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div>
-                    <div class="list-row"><span>@hlxzp</span><span class="rank-tag" style="color:var(--red)">EMPEROR [1/1]</span></div>
-                    <div class="list-row"><span>@kyx</span><span class="rank-tag" style="color:var(--red)">HAND [1/1]</span></div>
-                </div>
-                <div>
-                    <div class="list-row"><span>@seo</span><span class="rank-tag">MODERATOR [1/1]</span></div>
-                    <div class="list-row"><span>@Hulkyboi</span><span class="rank-tag">RECRUITER [2/4]</span></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="block span-2 tall" style="overflow-y: auto;">
-            <h2>Live Tryout Feed</h2>
-            <div id="history" style="font-size: 12px; color: #888;">
-                <div class="list-row"><span>@kyx passed <b>@speed</b></span><span>Yesterday</span></div>
-                <div class="list-row"><span>@kyx passed <b>@Pikachu</b></span><span>Yesterday</span></div>
-                <div class="list-row"><span>@kyx passed <b>@Gan_dondondon</b></span><span>Yesterday</span></div>
-                <div class="list-row"><span>@kyx passed <b>@EGEFORLIFE17</b></span><span>Yesterday</span></div>
-                <div class="list-row"><span>@kyx passed <b>@ķana’</b></span><span>17/02</span></div>
-            </div>
-        </div>
-
-        <div class="block span-2">
-            <h2>Student Roster (Elite)</h2>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div>
-                    <div class="list-row"><span>@.vyxzz</span><span class="rank-tag" style="color:var(--diamond)">DIAMOND</span></div>
-                    <div class="list-row"><span>@J7z</span><span class="rank-tag" style="color:var(--diamond)">DIAMOND</span></div>
-                </div>
-                <div>
-                    <div class="list-row"><span>@Bl00d</span><span class="rank-tag" style="color:var(--silver)">SILVER</span></div>
-                    <div class="list-row"><span>@izzel</span><span class="rank-tag" style="color:var(--silver)">SILVER</span></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="block span-4">
-            <button onclick="unlockStaff()" style="background: #111;">OPEN STAFF PORTAL</button>
+        <div class="block">
+            <button onclick="openModal()" id="portalBtn" style="background: transparent; color: var(--accent); border: 1px solid var(--accent);">Instructor Portal</button>
             <div id="adminSection">
-                <h3 style="font-size: 12px; color: var(--red);">PENDING SESSION APPROVALS</h3>
-                <div id="pendingContainer" style="font-size: 13px;">No active requests.</div>
+                <h2>Pending Approvals</h2>
+                <div id="pendingContainer" style="font-size: 13px; color: var(--text-dim);">Awaiting transmissions...</div>
             </div>
         </div>
-
     </div>
 
-    <div class="creed">"We do not accept defeat. We do not show mercy. We are Arize Kai."</div>
+    <div class="creed">"Silence is our weapon. Arize Kai."</div>
 </div>
 
 <script>
-    function unlockStaff() {
-        const pass = prompt("Enter Staff Password:");
-        if(pass === "arize2026") {
+    const modal = document.getElementById('passwordModal');
+    function openModal() { modal.style.display = 'flex'; }
+    function closeModal() { modal.style.display = 'none'; }
+
+    function checkPass() {
+        if(document.getElementById('staffPassInput').value === "arize2026") {
+            closeModal();
             document.getElementById('adminSection').style.display = 'block';
-            alert("Welcome, Instructor.");
+            document.getElementById('portalBtn').style.display = 'none';
         } else {
-            alert("Access Denied.");
+            alert("Unauthorized access denied.");
         }
     }
 
-    // This handles the form submission
     document.getElementById('bookForm').onsubmit = function(e) {
         e.preventDefault();
-        
-        // Grab values
         const name = document.getElementById('userNameBox').value;
         const type = document.getElementById('trainingType').value;
-        
-        // Auto Date/Time
         const now = new Date();
-        const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        const dateStr = now.toLocaleDateString();
+        const time = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 
-        // Admin Portal Update
-        const container = document.getElementById('pendingContainer');
-        if(container.innerHTML.includes("No active")) container.innerHTML = "";
+        const pContainer = document.getElementById('pendingContainer');
+        if(pContainer.innerHTML.includes("Awaiting")) pContainer.innerHTML = "";
 
         const div = document.createElement('div');
-        div.className = 'pending-req';
+        div.style = "padding: 14px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;";
         div.innerHTML = `
-            <span>
-                <b style="color:var(--red)">${name}</b> - ${type} 
-                <br>
-                <small style="color:#555">Sent: ${dateStr} @ ${timeStr}</small>
-            </span>
             <div>
-                <button onclick="this.parentElement.parentElement.remove()" style="background:green; width:70px; margin:0; font-size:10px; padding:5px;">Approve</button>
-                <button onclick="this.parentElement.parentElement.remove()" style="background:gray; width:70px; margin:0; font-size:10px; padding:5px;">Deny</button>
-            </div>`;
+                <b style="color: #fff">${name}</b><br>
+                <small style="color: var(--accent)">${type} • ${time}</small>
+            </div>
+            <button onclick="this.parentElement.remove()" style="width: auto; margin: 0; padding: 6px 14px; font-size: 10px; background: rgba(168, 85, 247, 0.2); color: var(--accent); border: 1px solid var(--accent);">DONE</button>
+        `;
         
-        container.appendChild(div);
-
-        // UI Feedback
+        pContainer.appendChild(div);
         document.getElementById('sentMsg').style.display = 'block';
-        document.getElementById('userNameBox').value = ""; // Clear the box
-        
-        return false;
+        document.getElementById('userNameBox').value = "";
+        setTimeout(() => { document.getElementById('sentMsg').style.display = 'none'; }, 4000);
     };
 </script>
 
 </body>
-    
 </html>
