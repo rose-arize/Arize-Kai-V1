@@ -111,7 +111,6 @@
     </header>
 
     <div class="bento">
-
         <div class="block">
             <h2>Requirements</h2>
             <div style="font-size: 28px; font-weight: 900; color: #fff;">TIER 40+</div>
@@ -121,10 +120,10 @@
 
         <div class="block tall">
             <h2>Book Training</h2>
-            <p style="font-size: 12px; color: #888;">Enter your name and type. The timestamp is generated automatically.</p>
+            <p style="font-size: 12px; color: #888;">Enter Username. Submission time is recorded automatically.</p>
             <form id="bookForm">
-                <input type="text" id="name" placeholder="Roblox Username" required>
-                <select id="type">
+                <input type="text" id="userNameBox" placeholder="Roblox Username" required>
+                <select id="trainingType">
                     <option>Rank Tryout</option>
                     <option>Sparring (Combat)</option>
                     <option>Private Training</option>
@@ -156,7 +155,6 @@
                 <div class="list-row"><span>@kyx passed <b>@Gan_dondondon</b></span><span>Yesterday</span></div>
                 <div class="list-row"><span>@kyx passed <b>@EGEFORLIFE17</b></span><span>Yesterday</span></div>
                 <div class="list-row"><span>@kyx passed <b>@ķana’</b></span><span>17/02</span></div>
-                <div class="list-row"><span>@hlxzp passed <b>@bouga2323</b></span><span>17/02</span></div>
             </div>
         </div>
 
@@ -177,8 +175,8 @@
         <div class="block span-4">
             <button onclick="unlockStaff()" style="background: #111;">OPEN STAFF PORTAL</button>
             <div id="adminSection">
-                <h3>Pending Session Approvals</h3>
-                <div id="pendingContainer">No active requests.</div>
+                <h3 style="font-size: 12px; color: var(--red);">PENDING SESSION APPROVALS</h3>
+                <div id="pendingContainer" style="font-size: 13px;">No active requests.</div>
             </div>
         </div>
 
@@ -198,33 +196,46 @@
         }
     }
 
-    document.getElementById('bookForm').addEventListener('submit', function(e) {
+    // This handles the form submission
+    document.getElementById('bookForm').onsubmit = function(e) {
         e.preventDefault();
-        const name = document.getElementById('name').value;
-        const type = document.getElementById('type').value;
         
-        // Auto-generate the current date and time
+        // Grab values
+        const name = document.getElementById('userNameBox').value;
+        const type = document.getElementById('trainingType').value;
+        
+        // Auto Date/Time
         const now = new Date();
-        const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        const dateString = now.toLocaleDateString();
+        const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        const dateStr = now.toLocaleDateString();
 
+        // Admin Portal Update
         const container = document.getElementById('pendingContainer');
-        if(container.innerText.includes("No active")) container.innerHTML = "";
+        if(container.innerHTML.includes("No active")) container.innerHTML = "";
 
         const div = document.createElement('div');
         div.className = 'pending-req';
-        div.innerHTML = `<span><b style="color:var(--red)">${name}</b> - ${type} <br><small style="color:#555">Submitted: ${dateString} at ${timeString}</small></span>
-                         <div>
-                            <button onclick="this.parentElement.parentElement.remove()" style="background:green; width:70px; margin:0; font-size:10px; padding:5px;">Approve</button>
-                            <button onclick="this.parentElement.parentElement.remove()" style="background:gray; width:70px; margin:0; font-size:10px; padding:5px;">Deny</button>
-                         </div>`;
+        div.innerHTML = `
+            <span>
+                <b style="color:var(--red)">${name}</b> - ${type} 
+                <br>
+                <small style="color:#555">Sent: ${dateStr} @ ${timeStr}</small>
+            </span>
+            <div>
+                <button onclick="this.parentElement.parentElement.remove()" style="background:green; width:70px; margin:0; font-size:10px; padding:5px;">Approve</button>
+                <button onclick="this.parentElement.parentElement.remove()" style="background:gray; width:70px; margin:0; font-size:10px; padding:5px;">Deny</button>
+            </div>`;
+        
         container.appendChild(div);
 
+        // UI Feedback
         document.getElementById('sentMsg').style.display = 'block';
-        this.reset();
-    });
+        document.getElementById('userNameBox').value = ""; // Clear the box
+        
+        return false;
+    };
 </script>
 
 </body>
+    
 </html>
-
