@@ -121,7 +121,7 @@
 
         <div class="block tall">
             <h2>Book Training</h2>
-            <p style="font-size: 12px; color: #888;">Enter your name and type. The Emperor will see the time you submitted.</p>
+            <p style="font-size: 12px; color: #888;">Enter your name and type. The timestamp is generated automatically.</p>
             <form id="bookForm">
                 <input type="text" id="name" placeholder="Roblox Username" required>
                 <select id="type">
@@ -213,10 +213,10 @@
 
         const div = document.createElement('div');
         div.className = 'pending-req';
-        div.innerHTML = `<span><b>${name}</b> - ${type} <br><small style="color:#555">Submitted: ${dateString} at ${timeString}</small></span>
+        div.innerHTML = `<span><b style="color:var(--red)">${name}</b> - ${type} <br><small style="color:#555">Submitted: ${dateString} at ${timeString}</small></span>
                          <div>
-                            <button onclick="this.parentElement.parentElement.remove()" style="background:green; width:70px; margin:0">Approve</button>
-                            <button onclick="this.parentElement.parentElement.remove()" style="background:gray; width:70px; margin:0">Deny</button>
+                            <button onclick="this.parentElement.parentElement.remove()" style="background:green; width:70px; margin:0; font-size:10px; padding:5px;">Approve</button>
+                            <button onclick="this.parentElement.parentElement.remove()" style="background:gray; width:70px; margin:0; font-size:10px; padding:5px;">Deny</button>
                          </div>`;
         container.appendChild(div);
 
@@ -227,3 +227,4 @@
 
 </body>
 </html>
+
