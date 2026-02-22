@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ARIZE KAI // COMMAND CENTER</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <style>
         :root {
-            --bg: #090712; /* Deep Midnight Purple */
-            --card: #131022; /* Darker Card */
-            --accent: #a855f7; /* Electric Purple */
+            --bg: #090712;
+            --card: #131022;
+            --accent: #a855f7;
             --accent-glow: rgba(168, 85, 247, 0.4);
             --text: #f3f4f6;
             --text-dim: #94a3b8;
@@ -25,16 +27,8 @@
             justify-content: center;
         }
 
-        .container { 
-            max-width: 450px; 
-            width: 100%; 
-        }
-
-        header {
-            text-align: center;
-            padding: 40px 0;
-        }
-
+        .container { max-width: 450px; width: 100%; }
+        header { text-align: center; padding: 40px 0; }
         h1 {
             font-size: 2.8rem;
             margin: 0;
@@ -45,122 +39,34 @@
             text-shadow: 0 0 20px var(--accent-glow);
         }
 
-        .tagline { 
-            color: var(--accent); 
-            letter-spacing: 3px; 
-            font-weight: 700; 
-            font-size: 10px; 
-            margin-top: 8px;
-            text-transform: uppercase;
-        }
+        .tagline { color: var(--accent); letter-spacing: 3px; font-weight: 700; font-size: 10px; margin-top: 8px; text-transform: uppercase; }
+        .bento { display: flex; flex-direction: column; gap: 15px; }
+        .block { background: var(--card); border: 1px solid var(--border); border-radius: 28px; padding: 24px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
+        h2 { font-size: 11px; text-transform: uppercase; color: var(--accent); margin: 0 0 16px 0; letter-spacing: 2px; font-weight: 800; }
 
-        .bento {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .block {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 28px;
-            padding: 24px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        h2 { 
-            font-size: 11px; 
-            text-transform: uppercase; 
-            color: var(--accent); 
-            margin: 0 0 16px 0; 
-            letter-spacing: 2px;
-            font-weight: 800;
-        }
-
-        .list-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border);
-            font-size: 14px;
-        }
-
-        .rank-tag { font-weight: 700; font-size: 11px; color: var(--text-dim); }
+        .list-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
         .instructor-tag { color: var(--accent); font-weight: 900; text-shadow: 0 0 10px var(--accent-glow); }
+        .rank-tag { font-weight: 700; font-size: 11px; color: var(--text-dim); }
 
         input, select, button {
-            width: 100%;
-            background: #1c1833;
-            border: 1px solid var(--border);
-            color: #fff;
-            padding: 16px;
-            margin-top: 10px;
-            border-radius: 16px;
-            font-size: 14px;
-            box-sizing: border-box;
-            outline: none;
-            font-family: inherit;
-            transition: 0.3s;
+            width: 100%; background: #1c1833; border: 1px solid var(--border); color: #fff;
+            padding: 16px; margin-top: 10px; border-radius: 16px; font-size: 14px; box-sizing: border-box; outline: none; font-family: inherit;
         }
 
+        input[type="date"], input[type="time"] { color-scheme: dark; cursor: pointer; }
         input:focus { border-color: var(--accent); background: #231e42; }
 
-        button { 
-            background: var(--accent); 
-            color: white; 
-            border: none; 
-            font-weight: 800; 
-            cursor: pointer; 
-            margin-top: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
+        button { background: var(--accent); color: white; border: none; font-weight: 800; cursor: pointer; margin-top: 20px; text-transform: uppercase; }
         button:active { transform: scale(0.96); }
 
-        #adminSection { 
-            display: none; 
-            margin-top: 20px; 
-            padding: 20px; 
-            background: #1c1833; 
-            border-radius: 24px; 
-            border: 1px solid var(--accent);
-        }
+        #adminSection { display: none; margin-top: 20px; padding: 20px; background: #1c1833; border-radius: 24px; border: 1px solid var(--accent); }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 4, 10, 0.9); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(15px); }
+        .modal-box { background: var(--card); padding: 40px; border-radius: 32px; width: 85%; max-width: 320px; text-align: center; border: 1px solid var(--border); }
 
-        /* Modal Overlay */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(5, 4, 10, 0.9);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            backdrop-filter: blur(15px);
-        }
-        .modal-box {
-            background: var(--card);
-            padding: 40px;
-            border-radius: 32px;
-            width: 85%;
-            max-width: 320px;
-            text-align: center;
-            border: 1px solid var(--border);
-        }
-
-        #sentMsg {
-            background: rgba(168, 85, 247, 0.1);
-            color: var(--accent);
-            padding: 12px;
-            border-radius: 14px;
-            text-align: center;
-            font-size: 13px;
-            margin-top: 15px;
-            font-weight: 700;
-            border: 1px solid rgba(168, 85, 247, 0.2);
-        }
-
+        #sentMsg { background: rgba(168, 85, 247, 0.1); color: var(--accent); padding: 12px; border-radius: 14px; text-align: center; font-size: 13px; margin-top: 15px; font-weight: 700; }
         .creed { color: var(--text-dim); text-align: center; margin: 40px 0; font-size: 12px; font-style: italic; }
+        .req-info { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+        .req-time { color: var(--accent); font-weight: 600; }
     </style>
 </head>
 <body>
@@ -168,7 +74,6 @@
 <div id="passwordModal" class="modal-overlay">
     <div class="modal-box">
         <h2 style="color: #fff; margin-bottom: 8px;">Restricted</h2>
-        <p style="font-size: 12px; color: var(--text-dim); margin-bottom: 20px;">Verification Required</p>
         <input type="password" id="staffPassInput" placeholder="Passcode">
         <button onclick="checkPass()">Unlock</button>
         <p onclick="closeModal()" style="color: var(--text-dim); font-size: 11px; margin-top: 20px; cursor: pointer;">Cancel</p>
@@ -189,7 +94,6 @@
             <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border);">
                 <div class="list-row"><span>@rose_official</span><span class="instructor-tag">INSTRUCTOR</span></div>
                 <div class="list-row"><span>@seo</span><span class="rank-tag">MODERATOR</span></div>
-                <div class="list-row"><span>@Hulkyboi</span><span class="rank-tag">RECRUITER</span></div>
             </div>
         </div>
 
@@ -199,94 +103,115 @@
                 <input type="text" id="userNameBox" placeholder="Roblox Username" required>
                 <select id="trainingType">
                     <option>Rank Tryout</option>
-                    <option>Private Training</option>
+                    <option>Combat Training</option>
                 </select>
+                <div style="display: flex; gap: 10px;">
+                    <input type="date" id="bookDate" required>
+                    <input type="time" id="bookTime" required>
+                </div>
                 <button type="submit">Submit Request</button>
             </form>
-            <div id="sentMsg" style="display:none;">Request transmitted to Instructors.</div>
+            <div id="sentMsg" style="display:none;">Transmission Sent.</div>
         </div>
 
         <div class="block">
             <button onclick="openModal()" id="portalBtn" style="background: transparent; color: var(--accent); border: 1px solid var(--accent);">Staff Portal</button>
             <div id="adminSection">
                 <h2>Pending Approvals</h2>
-                <div id="pendingContainer" style="font-size: 13px; color: var(--text-dim);"></div>
+                <div id="pendingContainer" style="font-size: 13px; color: var(--text-dim);">Awaiting transmissions...</div>
             </div>
         </div>
     </div>
-
     <div class="creed">"Silence is our weapon. Arize Kai."</div>
 </div>
 
 <script>
+    // --- VRO: YOUR KEYS ARE ALREADY PLUGGED IN ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyBUpHJRhnzrVbJyimYNlsW6x6eZgUQOlvc",
+      authDomain: "arize-kai.firebaseapp.com",
+      projectId: "arize-kai",
+      storageBucket: "arize-kai.firebasestorage.app",
+      messagingSenderId: "1068535893228",
+      appId: "1:1068535893228:web:78e4ffc7f41c581a97e9c9"
+    };
+
+    // Initialize Global Brain
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
     const modal = document.getElementById('passwordModal');
     const pContainer = document.getElementById('pendingContainer');
 
     function openModal() { modal.style.display = 'flex'; }
     function closeModal() { modal.style.display = 'none'; }
 
-    // This makes sure requests are there the second you open the site
-    window.onload = renderRequests;
-
     function checkPass() {
         if(document.getElementById('staffPassInput').value === "arize2026") {
             closeModal();
             document.getElementById('adminSection').style.display = 'block';
             document.getElementById('portalBtn').style.display = 'none';
-            renderRequests(); // Instant update when unlocked
-        } else {
-            alert("Unauthorized access denied.");
-        }
+            listenForRequests(); // This tells the site to start watching the cloud
+        } else { alert("Unauthorized."); }
     }
 
-    document.getElementById('bookForm').onsubmit = function(e) {
+    // Submit to Cloud Database
+    document.getElementById('bookForm').onsubmit = async function(e) {
         e.preventDefault();
         const name = document.getElementById('userNameBox').value;
         const type = document.getElementById('trainingType').value;
+        const targetDate = document.getElementById('bookDate').value;
+        const targetTime = document.getElementById('bookTime').value;
+
         const now = new Date();
-        const time = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        const clockTime = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 
-        const newRequest = { id: Date.now(), name, type, time };
-
-        let requests = JSON.parse(localStorage.getItem('arizeRequests') || '[]');
-        requests.push(newRequest);
-        localStorage.setItem('arizeRequests', JSON.stringify(requests));
-
-        renderRequests(); // Update the list INSTANTLY
-
-        document.getElementById('sentMsg').style.display = 'block';
-        document.getElementById('userNameBox').value = "";
-        setTimeout(() => { document.getElementById('sentMsg').style.display = 'none'; }, 4000);
+        try {
+            await db.collection("requests").add({
+                name: name,
+                type: type,
+                scheduled: `${targetDate} @ ${targetTime}`,
+                sentAt: clockTime,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp() // For sorting
+            });
+            document.getElementById('sentMsg').style.display = 'block';
+            document.getElementById('bookForm').reset();
+            setTimeout(() => { document.getElementById('sentMsg').style.display = 'none'; }, 4000);
+        } catch (err) {
+            console.error("Cloud Error:", err);
+            alert("Database connection failed. Check your Firebase Rules!");
+        }
     };
 
-    function renderRequests() {
-        const requests = JSON.parse(localStorage.getItem('arizeRequests') || '[]');
-        
-        if (requests.length === 0) {
-            pContainer.innerHTML = "Awaiting transmissions...";
-            return;
-        }
-
-        pContainer.innerHTML = ""; // Clear the "Awaiting" text instantly
-        requests.forEach(req => {
-            const div = document.createElement('div');
-            div.style = "padding: 14px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;";
-            div.innerHTML = `
-                <div>
-                    <b style="color: #fff">${req.name}</b><br>
-                    <small style="color: var(--accent)">${req.type} • ${req.time}</small>
-                </div>
-                <button onclick="removeRequest(${req.id})" style="width: auto; margin: 0; padding: 6px 14px; font-size: 10px; background: rgba(168, 85, 247, 0.2); color: var(--accent); border: 1px solid var(--accent);">DONE</button>
-            `;
-            pContainer.appendChild(div);
+    // Real-Time Cloud Listener
+    function listenForRequests() {
+        db.collection("requests").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
+            if (snapshot.empty) {
+                pContainer.innerHTML = "Awaiting transmissions...";
+                return;
+            }
+            pContainer.innerHTML = "";
+            snapshot.forEach((doc) => {
+                const req = doc.data();
+                const div = document.createElement('div');
+                div.style = "padding: 16px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;";
+                div.innerHTML = `
+                    <div>
+                        <b style="color: #fff">${req.name}</b><br>
+                        <div class="req-info">Type: <span style="color: #fff">${req.type}</span></div>
+                        <div class="req-info">Scheduled: <span class="req-time">${req.scheduled}</span></div>
+                        <div class="req-info" style="font-size: 9px; opacity: 0.6;">Sent at: ${req.sentAt}</div>
+                    </div>
+                    <button onclick="removeRequest('${doc.id}')" style="width: auto; margin: 0; padding: 6px 12px; font-size: 10px; background: rgba(168, 85, 247, 0.2); color: var(--accent); border: 1px solid var(--accent);">DONE</button>
+                `;
+                pContainer.appendChild(div);
+            });
         });
     }
 
-    function removeRequest(id) {
-        let requests = JSON.parse(localStorage.getItem('arizeRequests') || '[]');
-        requests = requests.filter(req => req.id !== id);
-        localStorage.setItem('arizeRequests', JSON.stringify(requests));
-        renderRequests(); // Refresh the list instantly
+    // Delete from Cloud
+    async function removeRequest(docId) {
+        await db.collection("requests").doc(docId).delete();
     }
 </script>
 
