@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ARIZE KAI // COMMAND CENTER</title>
-  <link rel="icon" type="image/x-icon" href="Screenshot 2026-02-21 233046.png">
+    <link rel="icon" type="image/x-icon" href="Screenshot 2026-02-21 233046.png">
     <style>
         :root {
             --red: #ff0000;
@@ -29,7 +29,6 @@
 
         .container { max-width: 1300px; width: 100%; }
 
-        /* --- UI ELEMENTS --- */
         header {
             text-align: center;
             padding: 60px 0;
@@ -49,7 +48,6 @@
 
         .tagline { color: var(--red); letter-spacing: 5px; font-weight: bold; font-size: 12px; margin-top: 5px; }
 
-        /* --- BENTO GRID --- */
         .bento {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -68,11 +66,11 @@
         .block:hover { border-color: #333; transform: translateY(-3px); }
         .span-2 { grid-column: span 2; }
         .span-3 { grid-column: span 3; }
+        .span-4 { grid-column: span 4; }
         .tall { grid-row: span 2; }
 
         h2 { font-size: 11px; text-transform: uppercase; color: #444; margin: 0 0 15px 0; border-left: 2px solid var(--red); padding-left: 10px; }
 
-        /* --- TABLES & LISTS --- */
         .list-row {
             display: flex;
             justify-content: space-between;
@@ -83,7 +81,6 @@
 
         .rank-tag { font-family: monospace; font-weight: bold; font-size: 11px; }
 
-        /* --- FORMS --- */
         input, select, button {
             width: 100%;
             background: #111;
@@ -97,11 +94,9 @@
         button { background: var(--red); border: none; font-weight: 900; cursor: pointer; text-transform: uppercase; }
         button:hover { background: #cc0000; box-shadow: 0 0 15px rgba(255,0,0,0.3); }
 
-        /* --- ADMIN PORTAL --- */
         #adminSection { display: none; margin-top: 30px; border: 1px dashed var(--red); padding: 20px; border-radius: 12px; }
         .pending-req { display: flex; justify-content: space-between; align-items: center; background: #000; padding: 10px; margin-bottom: 5px; border-radius: 4px; }
 
-        /* --- EXTRA COOL STUFF --- */
         .creed { font-style: italic; color: #888; text-align: center; margin-top: 40px; font-size: 14px; }
         .glitch { animation: glitch 1s infinite alternate; }
         @keyframes glitch { 0% { opacity: 1; } 100% { opacity: 0.8; color: #ff3333; } }
@@ -126,7 +121,7 @@
 
         <div class="block tall">
             <h2>Book Training</h2>
-            <p style="font-size: 12px; color: #888;">Request a session. Subject to Emperor's approval.</p>
+            <p style="font-size: 12px; color: #888;">Enter your name and type. The Emperor will see the time you submitted.</p>
             <form id="bookForm">
                 <input type="text" id="name" placeholder="Roblox Username" required>
                 <select id="type">
@@ -134,10 +129,9 @@
                     <option>Sparring (Combat)</option>
                     <option>Private Training</option>
                 </select>
-                <input type="datetime-local" id="time" required>
                 <button type="submit">SUBMIT REQUEST</button>
             </form>
-            <p id="sentMsg" style="display:none; color: lime; font-size: 11px; margin-top: 15px;">✓ Request logged in the Staff Portal.</p>
+            <p id="sentMsg" style="display:none; color: lime; font-size: 11px; margin-top: 15px;">✓ Request logged with timestamp.</p>
         </div>
 
         <div class="block span-2">
@@ -163,9 +157,6 @@
                 <div class="list-row"><span>@kyx passed <b>@EGEFORLIFE17</b></span><span>Yesterday</span></div>
                 <div class="list-row"><span>@kyx passed <b>@ķana’</b></span><span>17/02</span></div>
                 <div class="list-row"><span>@hlxzp passed <b>@bouga2323</b></span><span>17/02</span></div>
-                <div class="list-row"><span>@kyx passed <b>@yin</b></span><span>16/02</span></div>
-                <div class="list-row"><span>@kyx passed <b>@Carl</b></span><span>14/02</span></div>
-                <div class="list-row"><span>@kyx passed <b>@𝐈𝐛𝐛𝐲</b></span><span>14/02</span></div>
             </div>
         </div>
 
@@ -175,27 +166,16 @@
                 <div>
                     <div class="list-row"><span>@.vyxzz</span><span class="rank-tag" style="color:var(--diamond)">DIAMOND</span></div>
                     <div class="list-row"><span>@J7z</span><span class="rank-tag" style="color:var(--diamond)">DIAMOND</span></div>
-                    <div class="list-row"><span>@Sazunix</span><span class="rank-tag" style="color:var(--gold)">GOLD</span></div>
                 </div>
                 <div>
                     <div class="list-row"><span>@Bl00d</span><span class="rank-tag" style="color:var(--silver)">SILVER</span></div>
                     <div class="list-row"><span>@izzel</span><span class="rank-tag" style="color:var(--silver)">SILVER</span></div>
-                    <div class="list-row"><span>@Slashh</span><span class="rank-tag" style="color:var(--silver)">SILVER</span></div>
                 </div>
             </div>
         </div>
 
         <div class="block span-4">
-            <h2>AKK Grading Protocol</h2>
-            <div style="display: flex; justify-content: space-between; gap: 20px; font-size: 12px;">
-                <div><b style="color:var(--red)">GRADE I:</b> Entry Level / New Members.</div>
-                <div><b style="color:var(--red)">GRADE II:</b> Proven Loyalty & Consistent Activity.</div>
-                <div><b style="color:var(--red)">GRADE III:</b> 2+ Pods. Extreme Skill & Elite Presence.</div>
-            </div>
-        </div>
-
-        <div class="block span-4" style="text-align: center;">
-            <button onclick="unlockStaff()" style="background: #111; width: 250px;">OPEN STAFF PORTAL</button>
+            <button onclick="unlockStaff()" style="background: #111;">OPEN STAFF PORTAL</button>
             <div id="adminSection">
                 <h3>Pending Session Approvals</h3>
                 <div id="pendingContainer">No active requests.</div>
@@ -212,7 +192,7 @@
         const pass = prompt("Enter Staff Password:");
         if(pass === "arize2026") {
             document.getElementById('adminSection').style.display = 'block';
-            alert("Welcome, Sensei.");
+            alert("Welcome, Instructor.");
         } else {
             alert("Access Denied.");
         }
@@ -222,15 +202,18 @@
         e.preventDefault();
         const name = document.getElementById('name').value;
         const type = document.getElementById('type').value;
-        const time = document.getElementById('time').value;
+        
+        // Auto-generate the current date and time
+        const now = new Date();
+        const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        const dateString = now.toLocaleDateString();
 
-        // Add to Admin Section
         const container = document.getElementById('pendingContainer');
         if(container.innerText.includes("No active")) container.innerHTML = "";
 
         const div = document.createElement('div');
         div.className = 'pending-req';
-        div.innerHTML = `<span><b>${name}</b> - ${type} @ ${time}</span>
+        div.innerHTML = `<span><b>${name}</b> - ${type} <br><small style="color:#555">Submitted: ${dateString} at ${timeString}</small></span>
                          <div>
                             <button onclick="this.parentElement.parentElement.remove()" style="background:green; width:70px; margin:0">Approve</button>
                             <button onclick="this.parentElement.parentElement.remove()" style="background:gray; width:70px; margin:0">Deny</button>
@@ -244,4 +227,3 @@
 
 </body>
 </html>
-
