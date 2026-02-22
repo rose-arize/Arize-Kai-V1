@@ -127,7 +127,6 @@
             border: 1px solid var(--accent);
         }
 
-        /* Modal Overlay */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -220,14 +219,22 @@
 
 <script>
     const modal = document.getElementById('passwordModal');
+    const pContainer = document.getElementById('pendingContainer');
+
     function openModal() { modal.style.display = 'flex'; }
     function closeModal() { modal.style.display = 'none'; }
+
+    // Load saved requests from browser storage on startup
+    window.onload = function() {
+        renderRequests();
+    };
 
     function checkPass() {
         if(document.getElementById('staffPassInput').value === "arize2026") {
             closeModal();
             document.getElementById('adminSection').style.display = 'block';
             document.getElementById('portalBtn').style.display = 'none';
+            renderRequests(); // Refresh view when opening
         } else {
             alert("Unauthorized access denied.");
         }
@@ -240,26 +247,55 @@
         const now = new Date();
         const time = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 
-        const pContainer = document.getElementById('pendingContainer');
-        if(pContainer.innerHTML.includes("Awaiting")) pContainer.innerHTML = "";
+        // Create request object
+        const newRequest = { id: Date.now(), name, type, time };
 
-        const div = document.createElement('div');
-        div.style = "padding: 14px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;";
-        div.innerHTML = `
-            <div>
-                <b style="color: #fff">${name}</b><br>
-                <small style="color: var(--accent)">${type} • ${time}</small>
-            </div>
-            <button onclick="this.parentElement.remove()" style="width: auto; margin: 0; padding: 6px 14px; font-size: 10px; background: rgba(168, 85, 247, 0.2); color: var(--accent); border: 1px solid var(--accent);">DONE</button>
-        `;
-        
-        pContainer.appendChild(div);
+        // Save to LocalStorage
+        let requests = JSON.parse(localStorage.getItem('arizeRequests') || '[]');
+        requests.push(newRequest);
+        localStorage.setItem('arizeRequests', JSON.stringify(requests));
+
+        // Update UI if portal is open
+        renderRequests();
+
         document.getElementById('sentMsg').style.display = 'block';
         document.getElementById('userNameBox').value = "";
         setTimeout(() => { document.getElementById('sentMsg').style.display = 'none'; }, 4000);
     };
+
+    function renderRequests() {
+        const requests = JSON.parse(localStorage.getItem('arizeRequests') || '[]');
+        
+        if (requests.length === 0) {
+            pContainer.innerHTML = "Awaiting transmissions...";
+            return;
+        }
+
+        pContainer.innerHTML = ""; // Clear placeholder
+        requests.forEach(req => {
+            const div = document.createElement('div');
+            div.style = "padding: 14px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;";
+            div.innerHTML = `
+                <div>
+                    <b style="color: #fff">${req.name}</b><br>
+                    <small style="color: var(--accent)">${req.type} • ${req.time}</small>
+                </div>
+                <button onclick="removeRequest(${req.id})" style="width: auto; margin: 0; padding: 6px 14px; font-size: 10px; background: rgba(168, 85, 247, 0.2); color: var(--accent); border: 1px solid var(--accent);">DONE</button>
+            `;
+            pContainer.appendChild(div);
+        });
+    }
+
+    function removeRequest(id) {
+        let requests = JSON.parse(localStorage.getItem('arizeRequests') || '[]');
+        requests = requests.filter(req => req.id !== id);
+        localStorage.setItem('arizeRequests', JSON.stringify(requests));
+        renderRequests();
+    }
 </script>
 
 </body>
 </html>
+
+
 
